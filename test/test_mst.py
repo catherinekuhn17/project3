@@ -26,6 +26,12 @@ def check_mst(adj_mat: np.ndarray,
     """
     def approx_equal(a, b):
         return abs(a - b) < allowed_error
+    
+    num_unique_edges = len(np.unique(np.array([sorted((v1,v2)) 
+                                                for v1, v2 in zip(np.where(mst!=0)[0], np.where(mst!=0)[1])]) , axis=0)) 
+    assert num_unique_edges == len(adj_mat)-1 # number of edges in a MST should be # of nodes - 1.
+    
+    
 
     total = 0
     for i in range(mst.shape[0]):
