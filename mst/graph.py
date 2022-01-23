@@ -22,17 +22,35 @@ class Graph:
             return np.loadtxt(f, delimiter=',')
 
     def construct_mst(self):
-        """ Given `self.adj_mat`, the adjacency matrix of a connected undirected graph, implement Prim's 
-        algorithm to construct an adjacency matrix encoding the minimum spanning tree of `self.adj_mat`. 
-            
-        `self.adj_mat` is a 2D numpy array of floats. 
-        Note that because we assume our input graph is undirected, `self.adj_mat` is symmetric. 
-        Row i and column j represents the edge weight between vertex i and vertex j. An edge weight of zero indicates that no edge exists. 
-        
-        TODO: 
-            This function does not return anything. Instead, store the adjacency matrix 
-        representation of the minimum spanning tree of `self.adj_mat` in `self.mst`.
-        We highly encourage the use of priority queues in your implementation. See the heapq
-        module, particularly the `heapify`, `heappop`, and `heappush` functions.
         """
-        self.mst = 'TODO'
+        Method to find the minimum spanning tree of a given adjacency matrix
+        
+        returns:
+        -------
+        an diagonally symmetric adjacency matrix of a minimum spanning tree
+        
+        """
+        self.adj_mat = np.where(self.adj_mat == 0 , float('inf'), self.adj_mat) # setting edges wighted 0 to inf (since they don't exist so we can't use them)
+        pq = [] # priority queue of vertices
+        mst = np.zeros((len(self.adj_mat), len(self.adj_mat))) # initial output mst matrix of all zeroes
+        v1 = np.random.choice(range(len(self.adj_mat))) # choosing a random starting vertex
+        # creating a list of tuples of format (weight, vertex1, vertex2), to keep track of edge weights and the vertices connected
+        tup_list = list(zip(self.adj_mat[v1], range(len(self.adj_mat)), np.ones(len(self.adj_mat), dtype=np.int64)*v1))  
+        visited_vertices = [v1] 
+        for value in tup_list:
+            heapq.heappush(pq, value) # creating priority queue
+
+        while len(visited_vertices) < len(self.adj_mat): # while we don't have all the vertices in the visited list
+            lowest_weight = heapq.heappop(pq)
+            edge_weight = lowest_weight[0] 
+            v_out = lowest_weight[1]
+            v_in = lowest_weight[2]
+
+            if v_out not in visited_vertices: # if vertex going to not in visited vertices
+                visited_vertices.append(v_out) # add this vertex
+                mst[v_in][v_out] = edge_weight
+                mst[v_out][v_in] = edge_weight
+                tup_list = list(zip(self.adj_mat[lowest_weight[1]], range(len(self.adj_mat)), np.ones(len(self.adj_mat), dtype=np.int64)*lowest_weight[1])) 
+                for value in tup_list:
+                    heapq.heappush(pq, value) # add new edge weights to tuple
+        self.mst = mst
