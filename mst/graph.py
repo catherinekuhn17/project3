@@ -68,5 +68,6 @@ class Graph:
         if float('inf') in mst:
             print('Input matrix is not fully connected. No minimum spanning tree could be found.')
             self.mst = None
+            return
         
         self.mst = mst
