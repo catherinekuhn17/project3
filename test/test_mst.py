@@ -3,6 +3,8 @@ import pytest
 import numpy as np
 from mst import Graph
 from sklearn.metrics import pairwise_distances
+from scipy.sparse.csgraph import connected_components
+
 
 
 def check_mst(adj_mat: np.ndarray, 
@@ -29,9 +31,10 @@ def check_mst(adj_mat: np.ndarray,
     
     num_unique_edges = len(np.unique(np.array([sorted((v1,v2)) 
                                                 for v1, v2 in zip(np.where(mst!=0)[0], np.where(mst!=0)[1])]) , axis=0)) 
+    
     assert num_unique_edges == len(adj_mat)-1 # number of edges in a MST should be # of nodes - 1.
-    
-    
+    assert connected_components(mst)[0] == 1 # only 1 component in graph (meaning all connected)
+    assert 0 not in [sum(row) for row in mst] # no rows/columns should be entirely empty
 
     total = 0
     for i in range(mst.shape[0]):
@@ -65,4 +68,10 @@ def test_mst_single_cell_data():
 
 def test_mst_student():
     """ TODO: Write at least one unit test for MST construction """
+    # Testing edge case where mst does not exist bc graph not fully connected
+    file_path = './data/disconnected_matrix.csv'
+    g = Graph(file_path)
+    g.construct_mst()
+    assert g.mst == None
+    
     pass
