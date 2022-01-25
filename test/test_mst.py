@@ -67,8 +67,7 @@ def test_mst_single_cell_data():
 
 
 def test_mst_student():
-    """ TODO: Write at least one unit test for MST construction """
-    # Testing edge case where mst does not exist bc graph not fully connected
+    """ Unit test for edge case of disconnected input graph """
     file_path = './data/disconnected_matrix.csv'
     g = Graph(file_path)
     g.construct_mst()
