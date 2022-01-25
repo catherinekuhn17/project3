@@ -18,6 +18,9 @@ class Graph:
         self.mst = None
 
     def _load_adjacency_matrix_from_csv(self, path: str) -> np.ndarray:
+        """
+        converts csv to a 2D array
+        """
         with open(path) as f:
             return np.loadtxt(f, delimiter=',')
 
@@ -27,7 +30,9 @@ class Graph:
         
         returns:
         -------
-        an diagonally symmetric adjacency matrix of a minimum spanning tree
+        If an minimum spanning tree exists : this method will return a diagonally symmetric adjacency matrix of a minimum 
+        spanning tree.
+        If no minimum spanning tree exists : this method will return None.
         
         """
         self.adj_mat = np.where(self.adj_mat == 0 , float('inf'), self.adj_mat) # setting edges wighted 0 to inf (since they don't exist so we can't use them)
@@ -61,7 +66,7 @@ class Graph:
         # is infinity in the final mst, an mst doesn't exist, as it can't be created with real edges.
         
         if float('inf') in mst:
-            print('Input matrix is not connected. No minimum spanning tree could be found.')
-            return None
+            print('Input matrix is not fully connected. No minimum spanning tree could be found.')
+            self.mst = None
         
         self.mst = mst

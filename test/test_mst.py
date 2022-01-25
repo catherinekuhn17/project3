@@ -72,6 +72,6 @@ def test_mst_student():
     file_path = './data/disconnected_matrix.csv'
     g = Graph(file_path)
     g.construct_mst()
+    
     assert g.mst == None
     
-    pass
